@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/16 19:23:54 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 18:03:22 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 18:05:41 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define TESTS_H
 
 const char		*test_radix_sort_simple(void);
-const char		*test_radix_sort_randomized(void);
+const char		*test_radix_sort_randomized_small(void);
+const char		*test_radix_sort_randomized_large(void);
 
 #endif

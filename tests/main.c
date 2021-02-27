@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/16 19:23:49 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 18:03:11 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 18:05:21 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static void		all_tests(void)
 {
 	ft_printf("Radix Sort tests:\n");
 	OH_RUN_TEST(test_radix_sort_simple);
-	OH_RUN_TEST(test_radix_sort_randomized);
+	OH_RUN_TEST(test_radix_sort_randomized_small);
+	OH_RUN_TEST(test_radix_sort_randomized_large);
 }
 
 int				main(void)
