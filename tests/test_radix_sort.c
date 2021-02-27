@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:06:27 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 18:47:59 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 19:01:08 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ const char		*test_radix_sort_simple(void)
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
 	padded_size =
-		radix_sort_pad_array(&padded_arr, array, array_size, num_threads, false);
-	radix_sort(pool, padded_arr, padded_size, pool->num_threads);
+		radix_sort_pad_array(&padded_arr, array, array_size,
+			pool->num_threads, false);
+	radix_sort(pool, padded_arr, padded_size);
 	for (size_t i = 0; i < array_size; i++)
 	{
 		ft_printf("Array: %d, Check: %d\n", array[i], check_array[i]);
@@ -70,8 +71,9 @@ const char		*test_radix_sort_randomized_small(void)
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
 	padded_size =
-		radix_sort_pad_array(&padded_arr, array, array_size, num_threads, false);
-	radix_sort(pool, padded_arr, padded_size, pool->num_threads);
+		radix_sort_pad_array(&padded_arr, array, array_size,
+			pool->num_threads, false);
+	radix_sort(pool, padded_arr, padded_size);
 	OH_ASSERT("Radix sort simple sorted wrong",
 		arrays_match(check_array, array, array_size));
 	thread_pool_destroy(pool);
@@ -97,8 +99,9 @@ const char		*test_radix_sort_randomized_large(void)
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
 	padded_size =
-		radix_sort_pad_array(&padded_arr, array, array_size, num_threads, false);
-	radix_sort(pool, padded_arr, padded_size, pool->num_threads);
+		radix_sort_pad_array(&padded_arr, array, array_size,
+			pool->num_threads, false);
+	radix_sort(pool, padded_arr, padded_size);
 	OH_ASSERT("Radix sort simple sorted wrong",
 		arrays_match(check_array, array, array_size));
 	thread_pool_destroy(pool);

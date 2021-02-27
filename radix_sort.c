@@ -6,31 +6,95 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:00:41 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 18:43:46 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 19:49:53 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "radix_sort.h"
 
-size_t		radix_sort_pad_array(uint32_t **array_out, uint32_t *array,
-				size_t size_in, int32_t divisible_by, t_bool is_free)
-{
-	size_t		i;
-	size_t		new_size;
-	size_t		remainder;
 
-	remainder = size_in % divisible_by;
-	new_size = remainder == 0 ? size_in : (size_in + divisible_by - remainder);
-	*array_out = ft_calloc(sizeof(uint32_t) * new_size);
+
+static void		histogram_work(void *args)
+{
+	t_radix_params *params;
+
+	params = args;
+}
+
+static void		reorder_work(void *args)
+{
+	t_radix_params *params;
+
+	params = args;
+}
+
+static void		histogram(t_thread_pool *pool,
+						t_radix_params *global_params,
+						size_t shift_pass,
+						uint32_t *array,
+						uint32_t *tmp,
+						size_t size)
+{
+	size_t			i;
+	t_radix_params	*param;
+
 	i = -1;
-	while (++i < size_in)
-		(*array_out)[i] = array[i];
-	i = size_in - 1;
-	while (++i < new_size)
-		(*array_out)[i] = UINT32_MAX;
-	if (is_free)
-		free(array);
-	return (new_size);
+	while (++i < pool->num_threads)
+	{
+		param = &global_params[i];
+		param->n = size / pool->num_threads;
+		param->arr = array + i * param->n;
+		param->tmp = tmp + i * param->n;
+		param->shift = shift_pass;
+		thread_pool_add_work(pool, histogram_work, param);
+	}
+	thread_pool_wait(pool);
+}
+
+/*
+** ToDo: Parallelize prefix sum
+*/
+
+static void		prefix_sum(t_thread_pool *pool, t_radix_params *global_params)
+{
+	size_t			i;
+	size_t			j;
+	size_t			next_index;
+
+	next_index = 0;
+	i = -1;
+	while (++i < HISTOSPLIT)
+	{
+		j = -1;
+		while (++j < pool->num_threads)
+		{
+			global_params[j].index[i] = next_index;
+			next_index += global_params[j].count[i];
+		}
+	}
+}
+
+static void		reorder(t_thread_pool *pool,
+						t_radix_params *global_params,
+						size_t shift_pass,
+						uint32_t *array,
+						uint32_t *tmp,
+						size_t size)
+{
+	size_t			i;
+	t_radix_params	*param;
+
+	i = -1;
+	while (++i < pool->num_threads)
+	{
+		param = &global_params[i];
+		param->n = size / pool->num_threads;
+		param->arr = tmp + i * param->n;
+		param->tmp = array;
+		param->shift = shift_pass;
+		thread_pool_add_work(pool, reorder_work, param);
+	}
+	thread_pool_wait(pool);
 }
 
 /*
@@ -42,61 +106,27 @@ size_t		radix_sort_pad_array(uint32_t **array_out, uint32_t *array,
 ** number of logical threads on your processor
 */
 
-void	radix_sort(t_thread_pool *pool, uint32_t *array,
-			size_t size, int32_t num_work)
+void			radix_sort(t_thread_pool *pool, uint32_t *array, size_t size)
 {
-	(void)pool;
-	(void)array;
-	(void)size;
-	(void)num_work;
-	// size_t	i;
-	// size_t	j;
-	// size_t	shift;
-	// size_t	next_index;
+	size_t			shift_pass;
+	uint32_t		*tmp;
+	t_radix_params	*global_params;
 
-	// if (size == 0)
-	// 	return ;
-	// /* numbers of elements to be sorted must be multiple of number of threads */
-	// assert(n % N_THREADS == 0);
-
-	// for (shift = 0; shift < 32; shift += 8){
-	// 	/* divide elements to be sorted into N_THREAD many ranges and sort those */
-	// 	for (j = 0; j < N_THREADS; j++){
-	// 		struct radix_args *arg = &args[j];
-	// 		arg->n = n / N_THREADS;
-	// 		arg->a = a + j*arg->n;
-	// 		arg->b = b + j*arg->n;
-	// 		arg->shift = shift;
-	// 		pthread_create(&arg->thread, NULL, sort_range, arg);
-	// 	}
-
-	// 	/* wait until all threads are done */
-	// 	for (j = 0; j < N_THREADS; j++){
-	// 		pthread_join(args[j].thread, NULL);
-	// 	}
-
-	// 	/* calculate indices for buckets after merge */
-	// 	next_index = 0;
-	// 	for (i = 0; i < 256; i++){
-	// 		for (j = 0; j < N_THREADS; j++){
-	// 			args[j].index[i] = next_index;
-	// 			next_index += args[j].count[i];
-	// 		}
-	// 	}
-
-	// 	/* merge buckets of threads */
-	// 	for (j = 0; j < N_THREADS; j++){
-	// 		struct radix_args *arg = &args[j];
-	// 		arg->n = n / N_THREADS;
-	// 		arg->a = b + j*arg->n;
-	// 		arg->b = a;
-	// 		arg->shift = shift;
-	// 		pthread_create(&arg->thread, NULL, put_into_buckets, arg);
-	// 	}
-
-	// 	/* wait until all threads are done */
-	// 	for (j = 0; j < N_THREADS; j++){
-	// 		pthread_join(args[j].thread, NULL);
-	// 	}
-	// }
+	if (!radix_sort_is_valid(size, pool->num_threads))
+		return ;
+	global_params = ft_calloc(sizeof(*global_params) * pool->num_threads);
+	tmp = ft_calloc(sizeof(*array) * size);
+	shift_pass = 0;
+	while (shift_pass < RADIXTOTALBITS)
+	{
+		// Histogram
+		histogram(pool, global_params, shift_pass, array, tmp, size);
+		// Calculate indices (prefix sum)
+		prefix_sum(pool, global_params);
+		// Merge buckets of threads (reorder)
+		reorder(pool, global_params, shift_pass, array, tmp, size);
+		shift_pass += RADIXBITS;
+	}
+	free(global_params);
+	free(tmp);
 }

@@ -1,6 +1,13 @@
 {
 	"files.associations": {
 		"radix_sort.h": "c",
-		"utils.h": "c"
+		"utils.h": "c",
+		"algorithm": "c",
+		"bitset": "c",
+		"memory_resource": "c",
+		"iterator": "c",
+		"memory": "c",
+		"type_traits": "c",
+		"utility": "c"
 	}
 }
