@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"radix_sort.h": "c",
+		"utils.h": "c"
+	}
+}

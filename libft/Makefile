@@ -6,7 +6,7 @@
 #    By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/15 14:43:04 by ohakola           #+#    #+#              #
-#    Updated: 2020/12/07 19:56:25 by ohakola          ###   ########.fr        #
+#    Updated: 2021/01/08 22:02:31 by ohakola          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ SOURCES = ft_atoi.c \
 		ft_tolower.c \
 		ft_isalpha.c \
 		ft_islower.c \
-		ft_memalloc.c \
+		ft_calloc.c \
 		ft_putchar_fd.c \
 		ft_strcmp.c \
 		ft_strnstr.c \
@@ -140,8 +140,11 @@ SOURCES = ft_atoi.c \
 
 SRCS = $(addprefix $(DIR_SRC)/,$(SOURCES))
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
+DEV_OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=_dev.o))
+
 INC=-I./include/
-FLAGS = -Wall -Wextra -Werror -O3 -flto
+
+CFLAGS = -Wall -Wextra -Werror -O3 -flto
 
 all: $(DIR_OBJ) $(NAME)
 
@@ -156,7 +159,7 @@ $(DIR_OBJ):
 	@mkdir -p temp/thread_pool
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
-	@$(CC) -c -o $@ $< $(FLAGS) $(INC)
+	@$(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 DIR_TESTS = ./tests
 TEST_SRCS =$(wildcard $(DIR_TESTS)/*.c)
@@ -164,7 +167,7 @@ TEST_SRCS =$(wildcard $(DIR_TESTS)/*.c)
 test:
 	@make re
 	$(CC) -o test_run $(TEST_SRCS) -I$(DIR_TESTS)/include \
-			 -L./ -lft -lpthread $(FLAGS) $(INC) $(NAME)
+			 -L./ -lft -lpthread $(CFLAGS) $(INC) $(NAME)
 	./test_run
 	@/bin/rm -f main.o
 	@/bin/rm -f test_run

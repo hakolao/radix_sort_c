@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 13:11:01 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 17:20:46 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 18:44:31 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 
 # include "libft.h"
 
-void	radix_sort(
-			t_thread_pool *pool,
-			unsigned *array,
-			int size,
-			int num_work);
+size_t	radix_sort_pad_array(uint32_t **array_out, uint32_t *array,
+			size_t size_in, int32_t divisible_by, t_bool is_free);
+void	radix_sort(t_thread_pool *pool, uint32_t *array,
+			size_t size, int32_t num_work);
 
 #endif
