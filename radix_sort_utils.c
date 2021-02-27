@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 19:35:11 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 19:35:47 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 20:12:20 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ size_t			radix_sort_pad_array(uint32_t **array_out, uint32_t *array,
 		(*array_out)[i] = array[i];
 	i = size_in - 1;
 	while (++i < new_size)
-		(*array_out)[i] = MAXINT;
+		(*array_out)[i] = INT32_MAX - 1;
 	if (is_free)
 		free(array);
 	return (new_size);

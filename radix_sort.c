@@ -6,26 +6,55 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:00:41 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 19:49:53 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/02/27 20:09:41 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "radix_sort.h"
 
+static void		reorder_work(void *args)
+{
+	t_radix_params	*params;
+	uint32_t		*arr;
+	uint32_t		*tmp;
+	size_t			i;
+	size_t			bucket;
+	
+	params = args;
+	arr = params->arr;
+	tmp = params->tmp;
 
+	i = -1;
+	while (++i < params->n)
+	{
+		bucket = (arr[i] >> params->shift) & (HISTOLEN - 1);
+		tmp[params->index[bucket]++] = arr[i];
+	}
+}
 
 static void		histogram_work(void *args)
 {
-	t_radix_params *params;
+	t_radix_params	*params;
+	uint32_t		*arr;
+	size_t			i;
+	size_t			next_index;
 
 	params = args;
-}
-
-static void		reorder_work(void *args)
-{
-	t_radix_params *params;
-
-	params = args;
+	arr = params->arr;
+	i = -1;
+	while (++i < HISTOLEN)
+		params->count[i] = 0;
+	i = -1;
+	while (++i < params->n)
+		params->count[(arr[i] >> params->shift) & (HISTOLEN - 1)]++;
+	next_index = 0;
+	i = -1;
+	while (++i < params->n)
+	{
+		params->index[i] = next_index;
+		next_index += params->count[i];
+	}
+	reorder_work(params);
 }
 
 static void		histogram(t_thread_pool *pool,
@@ -63,7 +92,7 @@ static void		prefix_sum(t_thread_pool *pool, t_radix_params *global_params)
 
 	next_index = 0;
 	i = -1;
-	while (++i < HISTOSPLIT)
+	while (++i < HISTOLEN)
 	{
 		j = -1;
 		while (++j < pool->num_threads)
