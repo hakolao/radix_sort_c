@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 21:34:09 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 21:54:29 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 22:03:00 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,6 @@ void		histogram(t_thread_pool *pool,
 	}
 	thread_pool_wait(pool);
 }
-
-/*
-** ToDo: Parallelize prefix sum
-*/
 
 void		prefix_sum(t_radix_params *thread_params)
 {
