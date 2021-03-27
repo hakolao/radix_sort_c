@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:06:27 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/28 01:01:03 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/28 01:30:35 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 #include "radix_sort_utils.h"
 #include "utils.h"
 
-const char		*test_radix_sort_simple(void)
+const char		*test_radix_sort_simple(t_thread_pool *pool)
 {
-	t_thread_pool	*pool;
 	uint32_t		array[8];
 	uint32_t		check_array[8];
 	size_t			array_size;
-	size_t			num_threads;
 
 	array[0] = 1115;
 	array[1] = 80000;
@@ -31,56 +29,43 @@ const char		*test_radix_sort_simple(void)
 	array[6] = 2222;
 	array[7] = 12345;
 	array_size = 8;
-	num_threads = 8;
-	pool = thread_pool_create(num_threads);
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
 	radix_sort(pool, array, array_size);
 	OH_ASSERT("Radix sort simple sorted wrong",
 		arrays_match(check_array, array, array_size));
-	thread_pool_destroy(pool);
 	return (0);
 }
 
-const char		*test_radix_sort_randomized_small(void)
+const char		*test_radix_sort_randomized_small(t_thread_pool *pool)
 {
-	t_thread_pool	*pool;
 	uint32_t		array[16];
 	uint32_t		check_array[16];
 	size_t			array_size;
-	size_t			num_threads;
 
 	array_size = 16;
-	num_threads = 8;
-	pool = thread_pool_create(num_threads);
 	rand_array(array, array_size);
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
 	radix_sort(pool, array, array_size);
 	OH_ASSERT("Radix sort randomized small sorted wrong",
 		arrays_match(check_array, array, array_size));
-	thread_pool_destroy(pool);
 	return (0);
 }
 
-const char		*test_radix_sort_randomized_large(void)
+const char		*test_radix_sort_randomized_large(t_thread_pool *pool)
 {
-	t_thread_pool	*pool;
 	uint32_t		array[131072];
 	uint32_t		check_array[131072];
 	size_t			array_size;
-	size_t			num_threads;
 
 	array_size = 131072;
-	num_threads = 8;
-	pool = thread_pool_create(num_threads);
 	rand_array(array, array_size);
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
 	radix_sort(pool, array, array_size);
 	OH_ASSERT("Radix sort randomized large sorted wrong",
 		arrays_match(check_array, array, array_size));
-	thread_pool_destroy(pool);
 	return (0);
 }
 
@@ -90,9 +75,8 @@ const char		*test_radix_sort_randomized_large(void)
 ** just make sure the size is even
 */
 
-const char		*test_radix_sort_simple_key_val(void)
+const char		*test_radix_sort_simple_key_val(t_thread_pool *pool)
 {
-	t_thread_pool	*pool;
 	uint32_t		key_vals[2][8];
 	uint32_t		*key_vals_to_sort[2];
 	size_t			i;
@@ -106,7 +90,6 @@ const char		*test_radix_sort_simple_key_val(void)
 	i = -1;
 	while (++i < 6)
 		key_vals[1][i] = i;
-	pool = thread_pool_create(8);
 	key_vals_to_sort[0] = key_vals[0];
 	key_vals_to_sort[1] = key_vals[1];
 	radix_sort_key_val(pool, key_vals_to_sort, 6);
@@ -114,13 +97,11 @@ const char		*test_radix_sort_simple_key_val(void)
 	while (++i < 6)
 		OH_ASSERT("Radix sort simple key_val sorted wrong",
 			key_vals_to_sort[1][i] == i);
-	thread_pool_destroy(pool);
 	return (0);
 }
 
-const char		*test_radix_sort_large_key_val(void)
+const char		*test_radix_sort_large_key_val(t_thread_pool *pool)
 {
-	t_thread_pool	*pool;
 	uint32_t		key_vals[2][12345];
 	uint32_t		*key_vals_to_sort[2];
 	size_t			i;
@@ -131,7 +112,6 @@ const char		*test_radix_sort_large_key_val(void)
 		key_vals[0][i] = 12345 - 1 - i;
 		key_vals[1][i] = i;
 	}
-	pool = thread_pool_create(8);
 	key_vals_to_sort[0] = key_vals[0];
 	key_vals_to_sort[1] = key_vals[1];
 	radix_sort_key_val(pool, key_vals_to_sort, 12345);
@@ -139,6 +119,5 @@ const char		*test_radix_sort_large_key_val(void)
 	while (++i < 12345)
 		OH_ASSERT("Radix sort simple key_val sorted wrong",
 			key_vals_to_sort[1][i] == i);
-	thread_pool_destroy(pool);
 	return (0);
 }
