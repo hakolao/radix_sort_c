@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 19:35:11 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 18:45:44 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 20:28:11 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,12 @@ void			copy_array(uint32_t *dst, uint32_t *src,
 	i = -1;
 	while (++i < arrays_size)
 		dst[i] = src[i];
+}
+
+void			cleanup(uint32_t *padded_arr, uint32_t *tmp,
+					t_radix_params *global_params)
+{
+	free(global_params);
+	free(padded_arr);
+	free(tmp);
 }
