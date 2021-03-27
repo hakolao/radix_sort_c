@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 13:11:01 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 22:51:39 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/28 00:56:15 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,40 +31,20 @@
 typedef struct	s_radix_params
 {
 	size_t		work_index;
-	uint32_t	*arr;
-	uint32_t	*out;
+	uint32_t	*arr_keys;
+	uint32_t	*out_keys;
+	uint32_t	*arr_vals;
+	uint32_t	*out_vals;
 	size_t		shift;
 	size_t		bucket_size;
 	size_t		count[HISTOLEN];
 	size_t		index[HISTOLEN];
+	t_bool		is_key_val;
 }				t_radix_params;
 
 void			radix_sort(t_thread_pool *pool, uint32_t *array,
 					size_t size);
-
-/*
-** Radix utils
-*/
-
-size_t			radix_sort_pad_array(uint32_t **array_out, uint32_t *array,
-					size_t size_in);
-void			copy_array(uint32_t *dst, uint32_t *src,
-					size_t arrays_size);
-
-/*
-** Radix work
-*/
-
-void			reorder(t_thread_pool *pool,
-						t_radix_params *thread_params,
-						size_t shift_pass,
-						uint32_t *arrays[2]);
-void			prefix_sum(t_radix_params *thread_params);
-void			histogram(t_thread_pool *pool,
-						t_radix_params *thread_params,
-						size_t shift_pass,
-						uint32_t *arrays[2]);
-void			histogram_and_local_reorder(void *args);
-void			reorder_work(void *args);
+void			radix_sort_key_val(t_thread_pool *pool,
+					uint32_t *key_vals[2], size_t size);
 
 #endif

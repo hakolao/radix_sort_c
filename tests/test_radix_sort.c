@@ -6,12 +6,12 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:06:27 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 21:55:52 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/28 01:01:03 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "oh_test.h"
-#include "radix_sort.h"
+#include "radix_sort_utils.h"
 #include "utils.h"
 
 const char		*test_radix_sort_simple(void)
@@ -80,6 +80,65 @@ const char		*test_radix_sort_randomized_large(void)
 	radix_sort(pool, array, array_size);
 	OH_ASSERT("Radix sort randomized large sorted wrong",
 		arrays_match(check_array, array, array_size));
+	thread_pool_destroy(pool);
+	return (0);
+}
+
+/*
+** Sets values to be 0-5 indices, so checking against check array is easy
+** the values (indices, thus unique) should not be same for sorted array
+** just make sure the size is even
+*/
+
+const char		*test_radix_sort_simple_key_val(void)
+{
+	t_thread_pool	*pool;
+	uint32_t		key_vals[2][8];
+	uint32_t		*key_vals_to_sort[2];
+	size_t			i;
+
+	key_vals[0][0] = 5;
+	key_vals[0][1] = 4;
+	key_vals[0][2] = 3;
+	key_vals[0][3] = 2;
+	key_vals[0][4] = 1;
+	key_vals[0][5] = 0;
+	i = -1;
+	while (++i < 6)
+		key_vals[1][i] = i;
+	pool = thread_pool_create(8);
+	key_vals_to_sort[0] = key_vals[0];
+	key_vals_to_sort[1] = key_vals[1];
+	radix_sort_key_val(pool, key_vals_to_sort, 6);
+	i = -1;
+	while (++i < 6)
+		OH_ASSERT("Radix sort simple key_val sorted wrong",
+			key_vals_to_sort[1][i] == i);
+	thread_pool_destroy(pool);
+	return (0);
+}
+
+const char		*test_radix_sort_large_key_val(void)
+{
+	t_thread_pool	*pool;
+	uint32_t		key_vals[2][12345];
+	uint32_t		*key_vals_to_sort[2];
+	size_t			i;
+
+	i = -1;
+	while (++i < 12345)
+	{
+		key_vals[0][i] = 12345 - 1 - i;
+		key_vals[1][i] = i;
+	}
+	pool = thread_pool_create(8);
+	key_vals_to_sort[0] = key_vals[0];
+	key_vals_to_sort[1] = key_vals[1];
+	radix_sort_key_val(pool, key_vals_to_sort, 12345);
+	i = -1;
+	while (++i < 12345)
+		OH_ASSERT("Radix sort simple key_val sorted wrong",
+			key_vals_to_sort[1][i] == i);
 	thread_pool_destroy(pool);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/17 13:09:18 by ohakola           #+#    #+#              #
-#    Updated: 2021/03/27 21:36:33 by ohakola          ###   ########.fr        #
+#    Updated: 2021/03/27 22:56:53 by ohakola          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ DIR_TESTS = ./tests
 DIR_OBJ = temp
 SOURCES = radix_sort.c \
 			radix_sort_utils.c \
-			radix_work.c
+			radix_sort_work.c
 
 SRCS = $(addprefix $(DIR_SRC)/,$(SOURCES))
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))

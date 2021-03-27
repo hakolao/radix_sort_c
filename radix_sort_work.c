@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   radix_work.c                                       :+:      :+:    :+:   */
+/*   radix_sort_work.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 21:34:09 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 22:05:49 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/28 00:57:46 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "radix_sort.h"
+#include "radix_sort_utils.h"
 
 void		reorder_work(void *args)
 {
@@ -21,8 +21,8 @@ void		reorder_work(void *args)
 	size_t			bucket;
 
 	params = args;
-	arr = params->arr;
-	out = params->out;
+	arr = params->arr_keys;
+	out = params->out_keys;
 	i = -1;
 	while (++i < params->bucket_size)
 	{
@@ -39,7 +39,7 @@ void		histogram_and_local_reorder(void *args)
 	size_t			next_index;
 
 	params = args;
-	arr = params->arr;
+	arr = params->arr_keys;
 	i = -1;
 	while (++i < HISTOLEN)
 		params->count[i] = 0;
@@ -59,7 +59,7 @@ void		histogram_and_local_reorder(void *args)
 void		histogram(t_thread_pool *pool,
 						t_radix_params *thread_params,
 						size_t shift,
-						uint32_t *arrays[2])
+						uint32_t *arrays[4])
 {
 	size_t			i;
 	t_radix_params	*param;
@@ -68,8 +68,18 @@ void		histogram(t_thread_pool *pool,
 	while (++i < EXPECTED_THREADS)
 	{
 		param = thread_params + i;
-		param->arr = arrays[0] + i * param->bucket_size;
-		param->out = arrays[1] + i * param->bucket_size;
+		if (param->is_key_val)
+		{
+			param->arr_keys = arrays[0] + i * param->bucket_size;
+			param->arr_vals = arrays[1] + i * param->bucket_size;
+			param->out_keys = arrays[2] + i * param->bucket_size;
+			param->out_vals = arrays[3] + i * param->bucket_size;
+		}
+		else
+		{
+			param->arr_keys = arrays[0] + i * param->bucket_size;
+			param->out_keys = arrays[1] + i * param->bucket_size;
+		}
 		param->shift = shift;
 		thread_pool_add_work(pool, histogram_and_local_reorder, param);
 	}
@@ -77,7 +87,7 @@ void		histogram(t_thread_pool *pool,
 }
 
 /*
-** Compute prefix 
+** Compute prefix
 */
 
 void		prefix_sum(t_radix_params *thread_params)
@@ -107,7 +117,7 @@ void		prefix_sum(t_radix_params *thread_params)
 void		reorder(t_thread_pool *pool,
 						t_radix_params *thread_params,
 						size_t shift,
-						uint32_t *arrays[2])
+						uint32_t *arrays[4])
 {
 	size_t			i;
 	t_radix_params	*param;
@@ -116,8 +126,18 @@ void		reorder(t_thread_pool *pool,
 	while (++i < EXPECTED_THREADS)
 	{
 		param = thread_params + i;
-		param->arr = arrays[1] + i * param->bucket_size;
-		param->out = arrays[0];
+		if (param->is_key_val)
+		{
+			param->arr_keys = arrays[2] + i * param->bucket_size;
+			param->arr_vals = arrays[3] + i * param->bucket_size;
+			param->out_keys = arrays[0];
+			param->out_vals = arrays[1];
+		}
+		else
+		{
+			param->arr_keys = arrays[1] + i * param->bucket_size;
+			param->out_keys = arrays[0];
+		}
 		param->shift = shift;
 		thread_pool_add_work(pool, reorder_work, param);
 	}
