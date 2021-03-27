@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:57:40 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 18:46:56 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 18:46:30 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # include "libft.h"
 
 void			rand_array(uint32_t *array, uint32_t array_size);
-void			copy_array(uint32_t *dst, uint32_t *src,
-					size_t arrays_size);
 t_bool			arrays_match(uint32_t *arr1, uint32_t *arr2,
 					size_t arrays_size);
 void			sort_check_array(uint32_t *check_array, uint32_t array_size);

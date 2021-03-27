@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:06:27 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 19:01:08 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 20:07:33 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ const char		*test_radix_sort_simple(void)
 	uint32_t		check_array[8];
 	size_t			array_size;
 	size_t			num_threads;
-	uint32_t		*padded_arr;
-	size_t			padded_size;
 
-	padded_arr = NULL;
 	array[0] = 1115;
 	array[1] = 80000;
 	array[2] = 322410;
@@ -38,10 +35,7 @@ const char		*test_radix_sort_simple(void)
 	pool = thread_pool_create(num_threads);
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
-	padded_size =
-		radix_sort_pad_array(&padded_arr, array, array_size,
-			pool->num_threads, false);
-	radix_sort(pool, padded_arr, padded_size);
+	radix_sort(pool, array, array_size);
 	for (size_t i = 0; i < array_size; i++)
 	{
 		ft_printf("Array: %d, Check: %d\n", array[i], check_array[i]);
@@ -49,7 +43,6 @@ const char		*test_radix_sort_simple(void)
 	OH_ASSERT("Radix sort simple sorted wrong",
 		arrays_match(check_array, array, array_size));
 	thread_pool_destroy(pool);
-	free(padded_arr);
 	return (0);
 }
 
@@ -60,24 +53,17 @@ const char		*test_radix_sort_randomized_small(void)
 	uint32_t		check_array[128];
 	size_t			array_size;
 	size_t			num_threads;
-	uint32_t		*padded_arr;
-	size_t			padded_size;
 
-	padded_arr = NULL;
 	array_size = 128;
 	num_threads = 8;
 	pool = thread_pool_create(num_threads);
 	rand_array(array, array_size);
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
-	padded_size =
-		radix_sort_pad_array(&padded_arr, array, array_size,
-			pool->num_threads, false);
-	radix_sort(pool, padded_arr, padded_size);
-	OH_ASSERT("Radix sort simple sorted wrong",
+	radix_sort(pool, array, array_size);
+	OH_ASSERT("Radix sort randomized small sorted wrong",
 		arrays_match(check_array, array, array_size));
 	thread_pool_destroy(pool);
-	free(padded_arr);
 	return (0);
 }
 
@@ -88,23 +74,16 @@ const char		*test_radix_sort_randomized_large(void)
 	uint32_t		check_array[131072];
 	size_t			array_size;
 	size_t			num_threads;
-	uint32_t		*padded_arr;
-	size_t			padded_size;
 
-	padded_arr = NULL;
 	array_size = 131072;
 	num_threads = 8;
 	pool = thread_pool_create(num_threads);
 	rand_array(array, array_size);
 	copy_array(check_array, array, array_size);
 	sort_check_array(check_array, array_size);
-	padded_size =
-		radix_sort_pad_array(&padded_arr, array, array_size,
-			pool->num_threads, false);
-	radix_sort(pool, padded_arr, padded_size);
+	radix_sort(pool, array, array_size);
 	OH_ASSERT("Radix sort simple sorted wrong",
 		arrays_match(check_array, array, array_size));
 	thread_pool_destroy(pool);
-	free(padded_arr);
 	return (0);
 }

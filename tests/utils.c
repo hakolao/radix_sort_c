@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:57:02 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 18:47:37 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 18:46:24 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,6 @@ void			rand_array(uint32_t *array, uint32_t array_size)
 	i = -1;
 	while (++i < array_size)
 		array[i] = rand();
-}
-
-void			copy_array(uint32_t *dst, uint32_t *src,
-					size_t arrays_size)
-{
-	size_t	i;
-
-	i = -1;
-	while (++i < arrays_size)
-		dst[i] = src[i];
 }
 
 t_bool			arrays_match(uint32_t *arr1, uint32_t *arr2,

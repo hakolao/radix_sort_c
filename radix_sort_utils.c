@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 19:35:11 by ohakola           #+#    #+#             */
-/*   Updated: 2021/02/27 20:12:20 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 18:45:44 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,12 @@ size_t			radix_sort_pad_array(uint32_t **array_out, uint32_t *array,
 	return (new_size);
 }
 
-t_bool			radix_sort_is_valid(size_t size, size_t num_threads)
+void			copy_array(uint32_t *dst, uint32_t *src,
+					size_t arrays_size)
 {
+	size_t	i;
 
-	if ((size == 0) || (size % num_threads != 0))
-	{
-		ft_dprintf(2, "Sort size %d must be > 0 and div by num_threads %d\n",
-			size, num_threads);
-		return (false);
-	}
-	if (RADIXTOTALBITS % RADIXBITS != 0)
-	{
-		ft_dprintf(2, "RADIX_TOTALBITS must be divisible by RADIXBITS\n");
-		return (false);
-	}
-	return (true);
+	i = -1;
+	while (++i < arrays_size)
+		dst[i] = src[i];
 }

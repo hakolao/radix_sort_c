@@ -8,6 +8,21 @@
 		"iterator": "c",
 		"memory": "c",
 		"type_traits": "c",
-		"utility": "c"
+		"utility": "c",
+		"__hash_table": "c",
+		"__string": "c",
+		"array": "c",
+		"atomic": "c",
+		"cstdio": "c",
+		"cstdlib": "c",
+		"cstring": "c",
+		"cwchar": "c",
+		"istream": "c",
+		"ostream": "c",
+		"streambuf": "c",
+		"string": "c",
+		"string_view": "c",
+		"unordered_map": "c",
+		"vector": "c"
 	}
 }
