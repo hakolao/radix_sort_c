@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 13:11:01 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 21:53:53 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 22:51:39 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,15 @@
 */
 # define RADIXBITS 8
 # define RADIXTOTALBITS 32
-# define RADIX (1 << RADIXBITS)
+
+/*
+** RADIX = 1 << RADIXTOTALBITS(8) = 256
+*/
+# define RADIX 256
 # define HISTOLEN RADIX
 # define EXPECTED_THREADS 8
 
-typedef struct 	s_radix_params
+typedef struct	s_radix_params
 {
 	size_t		work_index;
 	uint32_t	*arr;
