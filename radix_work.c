@@ -6,7 +6,7 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 21:34:09 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/27 21:40:21 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/27 21:54:29 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		reorder_work(void *args)
 	uint32_t		*out;
 	size_t			i;
 	size_t			bucket;
-	
+
 	params = args;
 	arr = params->arr;
 	out = params->out;
@@ -58,9 +58,8 @@ void		histogram_and_local_reorder(void *args)
 
 void		histogram(t_thread_pool *pool,
 						t_radix_params *thread_params,
-						size_t shift_pass,
-						uint32_t *arrays[2],
-						size_t bucket_size)
+						size_t shift,
+						uint32_t *arrays[2])
 {
 	size_t			i;
 	t_radix_params	*param;
@@ -69,10 +68,9 @@ void		histogram(t_thread_pool *pool,
 	while (++i < EXPECTED_THREADS)
 	{
 		param = thread_params + i;
-		param->bucket_size = bucket_size;
 		param->arr = arrays[0] + i * param->bucket_size;
 		param->out = arrays[1] + i * param->bucket_size;
-		param->shift = shift_pass;
+		param->shift = shift;
 		thread_pool_add_work(pool, histogram_and_local_reorder, param);
 	}
 	thread_pool_wait(pool);
@@ -103,9 +101,8 @@ void		prefix_sum(t_radix_params *thread_params)
 
 void		reorder(t_thread_pool *pool,
 						t_radix_params *thread_params,
-						size_t shift_pass,
-						uint32_t *arrays[2],
-						size_t bucket_size)
+						size_t shift,
+						uint32_t *arrays[2])
 {
 	size_t			i;
 	t_radix_params	*param;
@@ -114,10 +111,9 @@ void		reorder(t_thread_pool *pool,
 	while (++i < EXPECTED_THREADS)
 	{
 		param = thread_params + i;
-		param->bucket_size = bucket_size;
 		param->arr = arrays[1] + i * param->bucket_size;
 		param->out = arrays[0];
-		param->shift = shift_pass;
+		param->shift = shift;
 		thread_pool_add_work(pool, reorder_work, param);
 	}
 	thread_pool_wait(pool);
