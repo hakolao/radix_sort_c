@@ -6,22 +6,11 @@
 /*   By: ohakola <ohakola@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:00:41 by ohakola           #+#    #+#             */
-/*   Updated: 2021/03/28 14:53:01 by ohakola          ###   ########.fr       */
+/*   Updated: 2021/03/28 14:56:54 by ohakola          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "radix_sort_utils.h"
-
-/*
-** If padding happened, free padded array and temp array
-** If padding did not happen, only free temp array
-** In case of key val sorting, free also vals
-*/
-
-static void		cleanup(t_radix_params *thread_params)
-{
-	free(thread_params);
-}
 
 static void		radix_sort_work(t_thread_pool *pool,
 						t_radix_params *thread_params,
@@ -74,7 +63,7 @@ void			radix_sort(t_thread_pool *pool, uint32_t *array, size_t size)
 	init_params(params, padded_size, false);
 	radix_sort_work(pool, params, (uint32_t*[2]){padded_ptr, tmp});
 	copy_array(array, padded_ptr, size);
-	cleanup(params);
+	free(params);
 }
 
 void			radix_sort_key_val(t_thread_pool *pool,
@@ -99,5 +88,5 @@ void			radix_sort_key_val(t_thread_pool *pool,
 		(uint32_t*[4]){padded_key_vals_ptr[0], padded_key_vals_ptr[1],
 		key_vals_tmp[0], key_vals_tmp[1]});
 	copy_array_key_vals(key_vals, padded_key_vals_ptr, size);
-	cleanup(params);
+	free(params);
 }
